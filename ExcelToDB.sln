@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33403.182
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExcelToDB", "ExcelToDB\ExcelToDB.csproj", "{E6CF5476-369F-4CA2-A2D4-9DE3419CA9B3}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "ExcelToDBSetup", "ExcelToDBSetup\ExcelToDBSetup.vdproj", "{43B762FB-358E-4DF4-A49F-3007512ABB7A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E6CF5476-369F-4CA2-A2D4-9DE3419CA9B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6CF5476-369F-4CA2-A2D4-9DE3419CA9B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6CF5476-369F-4CA2-A2D4-9DE3419CA9B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6CF5476-369F-4CA2-A2D4-9DE3419CA9B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43B762FB-358E-4DF4-A49F-3007512ABB7A}.Debug|Any CPU.ActiveCfg = Debug
+		{43B762FB-358E-4DF4-A49F-3007512ABB7A}.Release|Any CPU.ActiveCfg = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {43455462-1793-4678-8541-092BC34DA094}
+	EndGlobalSection
+EndGlobal
