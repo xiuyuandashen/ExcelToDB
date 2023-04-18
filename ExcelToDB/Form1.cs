@@ -152,7 +152,10 @@ namespace ExcelToDB
             }
             catch(Exception ex)
             {
-                MessageBox.Show(ex.Message, "系统异常");
+                MessageBox.Show(ex.Message, "系统异常");  
+            }
+            finally
+            {
                 fs?.Close();
                 fs2?.Close();
             }
