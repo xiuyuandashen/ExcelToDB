@@ -77,7 +77,26 @@ namespace ExcelToDB
                 }
                 else
                 {
-                    sqlItem = $"[{fielName}] {dbType}({size}) ";
+                    // 如果是INT类型不需要是大小
+                    if (dbType.ToUpper().Equals("INT"))
+                    {
+                        sqlItem = $"[{fielName}] {dbType} ";
+                    }
+                    // 如果 NVARCHAR VARCHAR 的size为0
+                    else if ((dbType.ToUpper().Equals("NVARCHAR") || dbType.ToUpper().Equals("VARCHAR")) && size.Equals("0"))
+                    {
+                        sqlItem = $"[{fielName}] {dbType}(255) ";
+                    }
+                    // 时间类型
+                    else if (dbType.ToUpper().Equals("DATETIME"))
+                    {
+                        sqlItem = $"[{fielName}] {dbType} ";
+                    }
+                    else
+                    {
+                        sqlItem = $"[{fielName}] {dbType}({size}) ";
+                    }
+                    
                 }
 
                 if ("是".Equals(isKey))

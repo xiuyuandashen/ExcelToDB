@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.SqlContentBox = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -41,18 +40,10 @@
             this.label3 = new System.Windows.Forms.Label();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.SqlContentBox = new System.Windows.Forms.RichTextBox();
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // SqlContentBox
-            // 
-            this.SqlContentBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SqlContentBox.Location = new System.Drawing.Point(3, 19);
-            this.SqlContentBox.Multiline = true;
-            this.SqlContentBox.Name = "SqlContentBox";
-            this.SqlContentBox.Size = new System.Drawing.Size(1126, 690);
-            this.SqlContentBox.TabIndex = 0;
             // 
             // button1
             // 
@@ -169,6 +160,15 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "SQL";
             // 
+            // SqlContentBox
+            // 
+            this.SqlContentBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.SqlContentBox.Location = new System.Drawing.Point(3, 19);
+            this.SqlContentBox.Name = "SqlContentBox";
+            this.SqlContentBox.Size = new System.Drawing.Size(1126, 690);
+            this.SqlContentBox.TabIndex = 0;
+            this.SqlContentBox.Text = "";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -182,14 +182,11 @@
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private TextBox SqlContentBox;
         private Button button1;
         private Button button2;
         private Label label1;
@@ -201,5 +198,6 @@
         private Label label3;
         private TextBox textBox2;
         private Button button4;
+        private RichTextBox SqlContentBox;
     }
 }
