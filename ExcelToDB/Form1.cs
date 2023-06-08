@@ -1,4 +1,4 @@
-using System.Data;
+ï»¿using System.Data;
 using System.Diagnostics;
 using System.Text;
 
@@ -15,14 +15,14 @@ namespace ExcelToDB
         }
 
         /// <summary>
-        /// Ñ¡ÔñExcel
+        /// é€‰æ‹©Excel
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void button2_Click(object sender, EventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Title = "ÇëÑ¡Ôñexcel";
+            dialog.Title = "è¯·é€‰æ‹©excel";
             dialog.Filter = "*.xls | *.xlsx";
             if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
@@ -31,105 +31,173 @@ namespace ExcelToDB
             }
         }
         /// <summary>
-        /// Éú³Ésql
+        /// ç”Ÿæˆsql
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void button1_Click(object sender, EventArgs e)
         {
-            if (fileName == string.Empty)
-            {
-                MessageBox.Show("ÇëÑ¡ÔñÎÄ¼ş", "ÏµÍ³ÌáÊ¾");
-                return;
-            }
-            string tableName = this.textBox1.Text.ToString().Trim();
-            string tableNameDesc = this.textBox2.Text.ToString().Trim();
-            if (tableName == string.Empty)
-            {
-                MessageBox.Show("ÇëÊäÈë±íÃû", "ÏµÍ³ÌáÊ¾");
-                return;
-            }
-            if (tableNameDesc == string.Empty)
-            {
-                MessageBox.Show("ÇëÊäÈë±íÃèÊö", "ÏµÍ³ÌáÊ¾");
-                return;
-            }
-            FileStream fs = File.OpenRead(fileName);
-            DataTable dt = ExcelHelper.ExcelToTable(fileName, fs, true, null, 0, 8);
-            Console.WriteLine(dt);
-            StringBuilder sb = new StringBuilder();
-            StringBuilder sbDesc = new StringBuilder();
-            sb.Append($"CREATE TABLE {tableName} (\r\n");
 
-            for (int i = 0; i < dt.Rows.Count; i++)
+            if (this.checkBox1.Checked)//æ·»åŠ å­—æ®µ
             {
-                DataRow dr = dt.Rows[i];
-                string fielName = dr[1].ToString();
-                string dbType = dr[2].ToString();
-                string size = dr[3].ToString();
-                string isEmpty = dr[4].ToString();
-                string isKey = dr[5].ToString();
-                string desc = dr[6].ToString();
-                string sqlItem = string.Empty;
-                if (string.IsNullOrEmpty(size.Trim()))
+                if (fileName == string.Empty)
                 {
-                    sqlItem = $"[{fielName}] {dbType} ";
+                    MessageBox.Show("è¯·é€‰æ‹©æ–‡ä»¶", "ç³»ç»Ÿæç¤º");
+                    return;
                 }
-                else
+                string tableName = this.textBox1.Text.ToString().Trim();
+                if (tableName == string.Empty)
                 {
-                    // Èç¹ûÊÇINTÀàĞÍ²»ĞèÒªÊÇ´óĞ¡
+                    MessageBox.Show("è¯·è¾“å…¥è¡¨å", "ç³»ç»Ÿæç¤º");
+                    return;
+                }
+                FileStream fs = File.OpenRead(fileName);
+                DataTable dt = ExcelHelper.ExcelToTable(fileName, fs, true, null, 0, 8);
+                Console.WriteLine(dt);
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    DataRow dr = dt.Rows[i];
+                    string fielName = dr[1].ToString();
+                    string dbType = dr[2].ToString();
+                    string size = dr[3].ToString();
+                    string isEmpty = dr[4].ToString();
+                    string isKey = dr[5].ToString();
+                    string desc = dr[6].ToString();
+                    //ALTER TABLE employee Â ADD Â spbh varchar(20) NOT NULL Default 0
+                    string sql = string.Empty;
+                    sql += $"ALTER TABLE {tableName} ADD ";
+
+                    // å¦‚æœæ˜¯INTç±»å‹ä¸éœ€è¦æ˜¯å¤§å°
                     if (dbType.ToUpper().Equals("INT"))
                     {
-                        sqlItem = $"[{fielName}] {dbType} ";
+                        sql += $"[{fielName}] {dbType} ";
                     }
-                    // Èç¹û NVARCHAR VARCHAR µÄsizeÎª0
-                    else if ((dbType.ToUpper().Equals("NVARCHAR") || dbType.ToUpper().Equals("VARCHAR")) && size.Equals("0"))
+                    // å¦‚æœ NVARCHAR VARCHAR çš„sizeä¸º0
+                    else if ((dbType.ToUpper().Equals("NVARCHAR") || dbType.ToUpper().Equals("VARCHAR")) && (size.Equals("0") || size.Trim().Equals(string.Empty)))
                     {
-                        sqlItem = $"[{fielName}] {dbType}(255) ";
+                        sql += $"[{fielName}] {dbType}(255) ";
                     }
-                    // Ê±¼äÀàĞÍ
+                    // æ—¶é—´ç±»å‹
                     else if (dbType.ToUpper().Equals("DATETIME"))
+                    {
+                        sql += $"[{fielName}] {dbType} ";
+                    }
+                    else
+                    {
+                        sql += $"[{fielName}] {dbType}({size}) ";
+                    }
+
+                    if ("å¦".Equals(isEmpty))
+                    {
+                        sql += $"NOT NULL ";
+                    }
+                    sb.Append(sql + ";\r\n");
+
+
+                }
+
+                this.SqlContentBox.Text = sb.ToString();
+            }
+            else//ç”Ÿæˆè¡¨
+            {
+                if (fileName == string.Empty)
+                {
+                    MessageBox.Show("è¯·é€‰æ‹©æ–‡ä»¶", "ç³»ç»Ÿæç¤º");
+                    return;
+                }
+                string tableName = this.textBox1.Text.ToString().Trim();
+                string tableNameDesc = this.textBox2.Text.ToString().Trim();
+                if (tableName == string.Empty)
+                {
+                    MessageBox.Show("è¯·è¾“å…¥è¡¨å", "ç³»ç»Ÿæç¤º");
+                    return;
+                }
+                if (tableNameDesc == string.Empty)
+                {
+                    MessageBox.Show("è¯·è¾“å…¥è¡¨æè¿°", "ç³»ç»Ÿæç¤º");
+                    return;
+                }
+                FileStream fs = File.OpenRead(fileName);
+                DataTable dt = ExcelHelper.ExcelToTable(fileName, fs, true, null, 0, 8);
+                Console.WriteLine(dt);
+                StringBuilder sb = new StringBuilder();
+                StringBuilder sbDesc = new StringBuilder();
+                sb.Append($"CREATE TABLE {tableName} (\r\n");
+
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    DataRow dr = dt.Rows[i];
+                    string fielName = dr[1].ToString();
+                    string dbType = dr[2].ToString();
+                    string size = dr[3].ToString();
+                    string isEmpty = dr[4].ToString();
+                    string isKey = dr[5].ToString();
+                    string desc = dr[6].ToString();
+                    string sqlItem = string.Empty;
+                    if (string.IsNullOrEmpty(size.Trim()))
                     {
                         sqlItem = $"[{fielName}] {dbType} ";
                     }
                     else
                     {
-                        sqlItem = $"[{fielName}] {dbType}({size}) ";
+                        // å¦‚æœæ˜¯INTç±»å‹ä¸éœ€è¦æ˜¯å¤§å°
+                        if (dbType.ToUpper().Equals("INT"))
+                        {
+                            sqlItem = $"[{fielName}] {dbType} ";
+                        }
+                        // å¦‚æœ NVARCHAR VARCHAR çš„sizeä¸º0
+                        else if ((dbType.ToUpper().Equals("NVARCHAR") || dbType.ToUpper().Equals("VARCHAR")) && (size.Equals("0") || size.Trim().Equals(string.Empty)))
+                        {
+                            sqlItem = $"[{fielName}] {dbType}(255) ";
+                        }
+                        // æ—¶é—´ç±»å‹
+                        else if (dbType.ToUpper().Equals("DATETIME"))
+                        {
+                            sqlItem = $"[{fielName}] {dbType} ";
+                        }
+                        else
+                        {
+                            sqlItem = $"[{fielName}] {dbType}({size}) ";
+                        }
+
                     }
-                    
-                }
 
-                if ("ÊÇ".Equals(isKey))
-                {
-                    sqlItem += $"primary key ";
+                    if ("æ˜¯".Equals(isKey))
+                    {
+                        sqlItem += $"primary key ";
+                    }
+                    if ("å¦".Equals(isEmpty))
+                    {
+                        sqlItem += $"not null ";
+                    }
+                    //if(!String.IsNullOrEmpty(desc))
+                    //{
+                    //    sqlItem += $"comment '{desc}' ";
+                    //}
+                    if (i < dt.Rows.Count - 1)
+                    {
+                        sqlItem += ",";
+                    }
+                    sb.Append(sqlItem + "\r\n");
+                    #region æ·»åŠ è¡¨å­—æ®µæ³¨é‡Š
+                    sbDesc.Append($"execute sp_addextendedproperty 'MS_Description','{desc}','user','dbo','table','{tableName}','column','{fielName}'; \r\n ");
+                    #endregion
+
                 }
-                if ("·ñ".Equals(isEmpty))
-                {
-                    sqlItem += $"not null ";
-                }
-                //if(!String.IsNullOrEmpty(desc))
-                //{
-                //    sqlItem += $"comment '{desc}' ";
-                //}
-                if (i < dt.Rows.Count - 1)
-                {
-                    sqlItem += ",";
-                }
-                sb.Append(sqlItem + "\r\n");
-                #region Ìí¼Ó±í×Ö¶Î×¢ÊÍ
-                sbDesc.Append($"execute sp_addextendedproperty 'MS_Description','{desc}','user','dbo','table','{tableName}','column','{fielName}'; \r\n ");
+                sb.Append(")");
+                #region ç”Ÿæˆè¡¨æ³¨é‡Š
+                string tableDescSQl = $"execute sp_addextendedproperty 'MS_Description','{tableNameDesc}','user','dbo','table','{tableName}',null,null;";
                 #endregion
-
+                this.SqlContentBox.Text = sb.ToString() + "\r\n" + sbDesc.ToString() + "\r\n" + tableDescSQl;
             }
-            sb.Append(")");
-            #region Éú³É±í×¢ÊÍ
-            string tableDescSQl = $"execute sp_addextendedproperty 'MS_Description','{tableNameDesc}','user','dbo','table','{tableName}',null,null;";
-            #endregion
-            this.SqlContentBox.Text = sb.ToString() + "\r\n" + sbDesc.ToString() + "\r\n" + tableDescSQl;
+
+
+
         }
 
         /// <summary>
-        /// Çå¿Õ
+        /// æ¸…ç©º
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -142,7 +210,7 @@ namespace ExcelToDB
         }
 
         /// <summary>
-        /// ÏÂÔØÄ£°å
+        /// ä¸‹è½½æ¨¡æ¿
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -153,40 +221,40 @@ namespace ExcelToDB
             try
             {
                 FolderBrowserDialog folderBrowser = new FolderBrowserDialog();
-                
-                folderBrowser.Description = "ÇëÑ¡Ôñ±£´æµÄµØÖ·";
+
+                folderBrowser.Description = "è¯·é€‰æ‹©ä¿å­˜çš„åœ°å€";
                 //folderBrowser.ShowNewFolderButton = true;
 
                 if (folderBrowser.ShowDialog() == DialogResult.OK)
                 {
                     string filePath = folderBrowser.SelectedPath;
-                    filePath = Path.Combine(filePath, "Ä£°å.xlsx");
+                    filePath = Path.Combine(filePath, "æ¨¡æ¿.xlsx");
                     fs = File.Create(filePath);
-                    //string templeFile = Application.CommonAppDataPath + @"\assist\Ä£°å.xlsx";
-                    string templeFile = Application.StartupPath + @"\assist\Ä£°å.xlsx";
+                    //string templeFile = Application.CommonAppDataPath + @"\assist\æ¨¡æ¿.xlsx";
+                    string templeFile = Application.StartupPath + @"\assist\æ¨¡æ¿.xlsx";
                     fs2 = File.OpenRead(templeFile);
                     fs2.CopyTo(fs);
                     OpenFolderAndSelectedFile(filePath);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "ÏµÍ³Òì³£");  
+                MessageBox.Show(ex.Message, "ç³»ç»Ÿå¼‚å¸¸");
             }
             finally
             {
                 fs?.Close();
                 fs2?.Close();
             }
-           
+
 
         }
 
 
         /// <summary>
-        /// ´ò¿ªÄ¿Â¼ÇÒÑ¡ÖĞÎÄ¼ş
+        /// æ‰“å¼€ç›®å½•ä¸”é€‰ä¸­æ–‡ä»¶
         /// </summary>
-        /// <param name="filePathAndName">ÎÄ¼şµÄÂ·¾¶ºÍÃû³Æ£¨±ÈÈç£ºC:\Users\Administrator\test.txt£©</param>
+        /// <param name="filePathAndName">æ–‡ä»¶çš„è·¯å¾„å’Œåç§°ï¼ˆæ¯”å¦‚ï¼šC:\Users\Administrator\test.txtï¼‰</param>
         private static void OpenFolderAndSelectedFile(string filePathAndName)
         {
             if (string.IsNullOrEmpty(filePathAndName)) return;
